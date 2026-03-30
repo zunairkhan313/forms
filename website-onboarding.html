@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Request | Expert Code Craft</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --border: #cbd5e1;
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --error: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            /* background: var(--bg-card); */
+            background: rgba(255, 255, 255, 0.671);
+            width: 100%;
+            max-width: 850px;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- REDESIGNED ATTRACTIVE HEADER --- */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            position: relative;
+        }
+
+        /* Fading divider line */
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        .brand-logo {
+            max-width: 240px;
+            height: auto;
+            margin-bottom: 24px;
+            display: inline-block;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.04));
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            /* Gradient text effect */
+            background: -webkit-linear-gradient(45deg, #1e3a8a, var(--primary), #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 550px;
+            margin: 0 auto 20px auto;
+            line-height: 1.6;
+        }
+
+        /* Sleek contact badge */
+        .contact-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--primary-light);
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: var(--primary);
+            font-size: 14px;
+            border: 1px solid #dbeafe;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.05);
+        }
+
+        .contact-badge svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.5;
+        }
+
+        .contact-badge a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .contact-badge a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+        .required-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 25px;
+            font-weight: 500;
+        }
+
+        /* --- FIXED UNIFORM GAPS --- */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px 20px;
+            /* 24px vertical gap, 20px horizontal */
+            margin-bottom: 24px;
+            /* Space below the entire row */
+        }
+
+        .form-group,
+        .file-group {
+            position: relative;
+            margin-bottom: 24px;
+            /* Uniform 24px bottom margin */
+            background: #fff;
+        }
+
+        /* Remove double-margin inside rows so the gap property handles it perfectly */
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 24px 14px 8px 14px;
+            font-size: 15px;
+            color: var(--text-main);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background-color: transparent;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-label {
+            position: absolute;
+            top: 17px;
+            left: 14px;
+            font-size: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: all 0.2s ease;
+            transform-origin: left top;
+        }
+
+        .form-control:focus~.form-label,
+        .form-control:not(:placeholder-shown)~.form-label {
+            top: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: inset 0 0 0 1px var(--primary);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .file-label-title {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .file-drop-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .file-drop-area:hover,
+        .file-drop-area.dragover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .file-drop-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-icon {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .file-msg-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .required-asterisk {
+            color: var(--error);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-family: Poppins, 'sans-serif';
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #statusMsg {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .success {
+            color: #065f46;
+            background: #d1fae5;
+            border: 1px solid #10b981;
+        }
+
+        .error {
+            color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+        }
+
+        @media (max-width: 650px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                /* Ensure vertical gap stays uniform on mobile */
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            body {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .contact-badge {
+                flex-direction: column;
+                gap: 5px;
+                padding: 12px 20px;
+            }
+        }
+
+        textarea {
+            margin-bottom: -10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <img src="./logo.png" alt="Expert Code Craft Logo" class="brand-logo">
+
+            <h1>Project Order Request</h1>
+
+            <p class="header-subtitle">After you fill out this order request, we will contact you to go over the details
+                and availability before the order is completed.</p>
+
+            <div class="contact-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                    </path>
+                </svg>
+                <span>For assistance: <a href="tel:+13477957990">+1 (347) 795-7990</a></span>
+            </div>
+
+            <p class="required-note"><span class="required-asterisk">*</span> Indicates required question</p>
+        </div>
+
+        <form id="orderForm">
+
+            <div class="form-group">
+                <textarea name="businessDetail" id="businessDetail" class="form-control" placeholder=" "
+                    required></textarea>
+                <label class="form-label" for="businessDetail">Tell us about your business in detail <span
+                        class="required-asterisk">*</span></label>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" name="legalName" id="legalName" class="form-control" placeholder=" " required>
+                    <label class="form-label" for="legalName">Legal name of company / organization <span
+                            class="required-asterisk">*</span></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="contactNumber" id="contactNumber" class="form-control" placeholder=" "
+                        required>
+                    <label class="form-label" for="contactNumber">Business contact number <span
+                            class="required-asterisk">*</span></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" name="businessEmail" id="businessEmail" class="form-control" placeholder=" "
+                        required>
+                    <label class="form-label" for="businessEmail">Business email <span
+                            class="required-asterisk">*</span></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="businessAddress" id="businessAddress" class="form-control" placeholder=" "
+                        required>
+                    <label class="form-label" for="businessAddress">Business address <span
+                            class="required-asterisk">*</span></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="workingHours" id="workingHours" class="form-control" placeholder=" "
+                        required>
+                    <label class="form-label" for="workingHours">Working / opening hours <span
+                            class="required-asterisk">*</span></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="pageCount" id="pageCount" class="form-control" placeholder=" " required>
+                    <label class="form-label" for="pageCount">How many pages do you want? <span
+                            class="required-asterisk">*</span></label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" name="colorCombination" id="colorCombination" class="form-control"
+                        placeholder=" " required>
+                    <label class="form-label" for="colorCombination">Color combination for website? <span
+                            class="required-asterisk">*</span></label>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" name="existingWebsite" id="existingWebsite" class="form-control" placeholder=" "
+                        required>
+                    <label class="form-label" for="existingWebsite">Existing website link (If applicable) <span
+                            class="required-asterisk">*</span></label>
+                </div>
+            </div>
+
+            <div class="file-group">
+                <span class="file-label-title">Your Logo <span class="required-asterisk">*</span></span>
+                <div class="file-drop-area">
+                    <svg class="file-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span class="file-msg-text">Drag & drop your file here or click to browse</span>
+                    <input type="file" name="yourLogo" id="yourLogo" accept="image/*" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <textarea name="specificFeatures" id="specificFeatures" class="form-control" placeholder=" "
+                    required></textarea>
+                <label class="form-label" for="specificFeatures">Specific features or functionalities you want to
+                    include <span class="required-asterisk">*</span></label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="designPreferences" id="designPreferences" class="form-control"
+                    placeholder=" "></textarea>
+                <label class="form-label" for="designPreferences">Specific design preferences or branding guidelines
+                    (Optional)</label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="admiredWebsites" id="admiredWebsites" class="form-control" placeholder=" "
+                    required></textarea>
+                <label class="form-label" for="admiredWebsites">Websites you admire in terms of design? (Attach links)
+                    <span class="required-asterisk">*</span></label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="contentCreation" id="contentCreation" class="form-control" placeholder=" "
+                    required></textarea>
+                <label class="form-label" for="contentCreation">Do you have existing content, or need assistance? <span
+                        class="required-asterisk">*</span></label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="neededFeatures" id="neededFeatures" class="form-control" placeholder=" "></textarea>
+                <label class="form-label" for="neededFeatures">What specific features do you need? (e.g. e-commerce)
+                    (Optional)</label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="integrations" id="integrations" class="form-control" placeholder=" "
+                    required></textarea>
+                <label class="form-label" for="integrations">Third-party integrations required? (e.g. payment gateways)
+                    <span class="required-asterisk">*</span></label>
+            </div>
+
+            <div class="form-group">
+                <textarea name="imageTypes" id="imageTypes" class="form-control" placeholder=" " required></textarea>
+                <label class="form-label" for="imageTypes">Type of images to be uploaded on website? <span
+                        class="required-asterisk">*</span></label>
+            </div>
+
+            <div class="file-group">
+                <span class="file-label-title">If you have any images, send us (Optional)</span>
+                <div class="file-drop-area">
+                    <svg class="file-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span class="file-msg-text">Drag & drop multiple files here or click to browse</span>
+                    <input type="file" name="referenceImages" id="referenceImages" accept="image/*" multiple>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Complete Order Request</button>
+            <div id="statusMsg"></div>
+        </form>
+    </div>
+
+    <script>
+        // Drag and Drop Logic
+        document.querySelectorAll('.file-drop-area input[type="file"]').forEach(input => {
+            const dropArea = input.closest('.file-drop-area');
+            const msgText = dropArea.querySelector('.file-msg-text');
+            const defaultText = msgText.innerText;
+
+            input.addEventListener('change', (e) => {
+                if (input.files.length > 1) {
+                    msgText.innerText = `${input.files.length} files selected`;
+                    msgText.style.color = 'var(--primary)';
+                    msgText.style.fontWeight = '600';
+                } else if (input.files.length === 1) {
+                    msgText.innerText = input.files[0].name;
+                    msgText.style.color = 'var(--primary)';
+                    msgText.style.fontWeight = '600';
+                } else {
+                    msgText.innerText = defaultText;
+                    msgText.style.color = 'var(--text-muted)';
+                    msgText.style.fontWeight = 'normal';
+                }
+            });
+
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.classList.add('dragover');
+            });
+
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.classList.remove('dragover');
+            });
+
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('dragover');
+
+                if (e.dataTransfer.files.length) {
+                    input.files = e.dataTransfer.files;
+                    input.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+        // Form Submission Logic
+        const form = document.getElementById('orderForm');
+        const btn = document.getElementById('submitBtn');
+        const msg = document.getElementById('statusMsg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            btn.disabled = true;
+            btn.innerText = 'Uploading Request...';
+            msg.style.display = 'none';
+
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+
+            try {
+                const response = await fetch('https://api.expertcodecraft.com/noAuth/order-request', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    msg.innerText = "Success! We will contact you soon to go over the details.";
+                    msg.className = 'success';
+                    msg.style.display = 'block';
+                    form.reset();
+
+                    document.querySelectorAll('.file-msg-text').forEach(el => {
+                        el.innerText = 'Drag & drop your file here or click to browse';
+                        el.style.color = 'var(--text-muted)';
+                        el.style.fontWeight = 'normal';
+                    });
+                } else {
+                    throw new Error('Server returned an error.');
+                }
+            } catch (err) {
+                msg.innerText = "Submission failed. Please check your connection and try again.";
+                msg.className = 'error';
+                msg.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Complete Order Request';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
