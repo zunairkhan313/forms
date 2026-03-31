@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Design Hub — Secure Payment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --brand: #e5672d;
+            --brand-dark: #d93e2a;
+            --brand-light: #eff6ff;
+            --brand-muted: #dbeafe;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --error: #b91c1c;
+            --error-bg: #fee2e2;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #fafafe 50%, #f0f7ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+            color: var(--gray-800);
+        }
+
+        /* ── Card ── */
+        .card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 440px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* ── Card Header ── */
+        .card-header {
+            padding: 1.75rem 2rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-wrap img {
+            height: 55px;
+            width: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* ── Amount Badge ── */
+        .amount-section {
+            padding: 1.5rem 2rem;
+            background: var(--brand-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--brand-muted);
+        }
+
+        .amount-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--brand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .amount-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #fff;
+        }
+
+        .amount-details {
+            flex: 1;
+        }
+
+        .amount-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--brand);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 2px;
+        }
+
+        .amount-value {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.1;
+        }
+
+        .amount-sub {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .amount-badge {
+            background: white;
+            border: 1px solid var(--brand-muted);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--brand);
+            white-space: nowrap;
+        }
+
+        /* ── Form Body ── */
+        .card-body {
+            padding: 1.75rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        /* ── Field Groups ── */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 15px;
+        }
+
+        /* ── Floating label wrapper ── */
+        .float-wrap {
+            position: relative;
+        }
+
+        .float-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.88rem;
+            font-weight: 400;
+            color: var(--gray-400);
+            pointer-events: none;
+            transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, font-weight 0.18s ease;
+            transform-origin: left center;
+            white-space: nowrap;
+        }
+
+        /* Lifted state — triggered via JS class or :focus/:not(:placeholder-shown) */
+        .float-wrap.has-value .float-label,
+        .float-wrap.focused .float-label {
+            top: 0.55rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--brand);
+            transform: translateY(0);
+        }
+
+        /* ── Inputs ── */
+        .input-field {
+            width: 100%;
+            padding: 1.45rem 1rem 0.45rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .input-field::placeholder {
+            color: transparent;
+        }
+
+        .input-field:focus {
+            border-color: var(--brand);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        /* ── Searchable Dropdown ── */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            width: 100%;
+            padding: 1.45rem 2.75rem 0.45rem 1rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            text-align: left;
+        }
+
+        .dropdown-trigger::placeholder {
+            color: transparent;
+        }
+
+        .dropdown-trigger:focus {
+            border-color: var(--brand);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .dropdown-trigger.is-open {
+            border-color: var(--brand);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .dropdown-chevron {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            pointer-events: none;
+            transition: transform 0.25s ease;
+            color: var(--gray-400);
+            width: 18px;
+            height: 18px;
+        }
+
+        .dropdown-chevron.is-open {
+            transform: translateY(-50%) rotate(180deg);
+            color: var(--brand);
+        }
+
+        /* ── Options Panel ── */
+        .options-panel {
+            position: absolute;
+            top: calc(100% - 1px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1.5px solid var(--brand);
+            border-top: 1px solid var(--gray-200);
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            z-index: 100;
+            max-height: 220px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.10);
+            opacity: 0;
+            transform: translateY(-6px);
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .options-panel.is-open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        /* Search bar inside the dropdown */
+        .dropdown-search-wrap {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .dropdown-search-wrap svg {
+            width: 15px;
+            height: 15px;
+            color: var(--gray-400);
+            flex-shrink: 0;
+        }
+
+        .dropdown-search {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            color: var(--gray-700);
+            background: transparent;
+        }
+
+        .dropdown-search::placeholder {
+            color: var(--gray-400);
+        }
+
+        .options-list {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .options-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .options-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .options-list::-webkit-scrollbar-thumb {
+            background: var(--gray-200);
+            border-radius: 4px;
+        }
+
+        .option-item {
+            padding: 10px 14px;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.12s, color 0.12s;
+        }
+
+        .option-item:hover,
+        .option-item.focused {
+            background: var(--brand-light);
+            color: var(--brand);
+        }
+
+        .option-item.selected {
+            background: var(--brand-muted);
+            color: var(--brand-dark);
+            font-weight: 600;
+        }
+
+        .option-item svg {
+            width: 14px;
+            height: 14px;
+            opacity: 0;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected svg {
+            opacity: 1;
+        }
+
+        .no-results {
+            padding: 16px 14px;
+            font-size: 0.83rem;
+            color: var(--gray-400);
+            text-align: center;
+            display: none;
+        }
+
+        /* ── Trust Badges ── */
+        .trust-row {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 15px;
+        }
+
+        .trust-badge {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.72rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .trust-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #16a34a;
+            flex-shrink: 0;
+        }
+
+        /* ── Submit Button ── */
+        .pay-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            /* box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.01em;
+        }
+
+        .pay-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .pay-btn:hover:not(:disabled) {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            /* box-shadow: 0 6px 20px rgba(37, 99, 235, 0.40); */
+        }
+
+        .pay-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* ── Messages ── */
+        .message-box {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-box svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .message-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid #bbf7d0;
+        }
+
+        .message-error {
+            background: var(--error-bg);
+            color: var(--error);
+            border: 1px solid #fecaca;
+        }
+
+        /* ── Footer ── */
+        .card-footer {
+            padding: 1rem 2rem 1.5rem;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            align-items: center;
+        }
+
+        .gateway-logo {
+            width: 100%;
+            /* max-height: 52px; */
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .dropdown-search {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.82rem;
+            color: var(--gray-700);
+            background: transparent;
+        }
+
+        .footer-note {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            color: var(--gray-400);
+        }
+
+        .footer-note svg {
+            width: 13px;
+            height: 13px;
+            color: #22c55e;
+        }
+
+        /* ── Spinner ── */
+        .btn-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+
+        <!-- Header -->
+        <div class="card-header">
+            <div class="logo-wrap">
+                <img src="./logo.png" alt="Expert Code Craft" draggable="false">
+            </div>
+        </div>
+
+        <!-- Amount Section -->
+        <div class="amount-section">
+            <div class="amount-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="amount-details">
+                <div class="amount-label">Amount Due</div>
+                <div class="amount-value" id="payment-amount-display">$0</div>
+                <div class="amount-sub">Payment to: <strong>Expert Code Craft</strong></div>
+            </div>
+            <span class="amount-badge">Credit / Debit</span>
+        </div>
+
+        <!-- Form -->
+        <div class="card-body">
+            <form id="payment-form" autocomplete="off">
+
+                <!-- Cardholder Name -->
+                <div class="field-group">
+                    <div class="float-wrap" id="name-wrap">
+                        <label class="float-label" for="name-input">Cardholder Name</label>
+                        <input type="text" id="name-input" class="input-field" placeholder=" " required>
+                    </div>
+                </div>
+
+                <!-- Purpose of Payment — Searchable Dropdown -->
+                <div class="field-group">
+                    <div class="float-wrap" id="purpose-float-wrap">
+                        <div class="dropdown-wrapper" id="purpose-wrapper">
+                            <!-- Floating label sits above the trigger -->
+                            <label class="float-label" id="purpose-float-label">Purpose of Payment</label>
+
+                            <!-- Trigger field shows selected value -->
+                            <input type="text" id="purpose-display" class="dropdown-trigger" placeholder=" " readonly
+                                required>
+                            <input type="hidden" id="purpose-value">
+
+                            <!-- Chevron icon -->
+                            <svg class="dropdown-chevron" id="dropdown-chevron" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+
+                            <!-- Options panel with internal search -->
+                            <div class="options-panel" id="options-panel">
+                                <div class="dropdown-search-wrap">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+                                    </svg>
+                                    <input type="text" id="dropdown-search" class="dropdown-search"
+                                        placeholder="Search services…">
+                                </div>
+                                <div class="options-list" id="options-list">
+                                    <div class="option-item" data-value="website-development">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Website Development
+                                    </div>
+                                    <div class="option-item" data-value="custom-website">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Custom Website Development
+                                    </div>
+                                    <div class="option-item" data-value="mobile-app">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Mobile App Development
+                                    </div>
+                                    <div class="option-item" data-value="seo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        SEO Optimization
+                                    </div>
+                                    <div class="option-item" data-value="digital-marketing">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Digital Marketing
+                                    </div>
+                                    <div class="option-item" data-value="logo-design">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Logo Design &amp; Branding
+                                    </div>
+                                </div>
+                                <div class="no-results" id="no-results">No services found</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="trust-row">
+                    <div class="trust-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        256-bit SSL
+                    </div>
+                    <div class="trust-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        PCI DSS Compliant
+                    </div>
+                </div>
+
+                <!-- Message Area -->
+                <div id="message-container"></div>
+
+                <!-- Submit -->
+                <button id="pay-button" type="submit" class="pay-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span id="pay-btn-text">Pay $0 Now</span>
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer">
+            <img src="./checkout.png" alt="Payment Gateway" class="gateway-logo" id="gateway-img" draggable="false">
+            <p class="footer-note">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Your payment info is encrypted. We never store card details.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ── Elements ──────────────────────────────────────────────────
+            const nameInput = document.getElementById('name-input');
+            const nameWrap = document.getElementById('name-wrap');
+            const purposeDisplay = document.getElementById('purpose-display');
+            const purposeValue = document.getElementById('purpose-value');
+            const purposeWrapper = document.getElementById('purpose-wrapper');
+            const purposeFloatWrap = document.getElementById('purpose-float-wrap');
+            const optionsPanel = document.getElementById('options-panel');
+            const dropdownSearch = document.getElementById('dropdown-search');
+            const optionsList = document.getElementById('options-list');
+            const chevron = document.getElementById('dropdown-chevron');
+            const noResults = document.getElementById('no-results');
+            const optionItems = document.querySelectorAll('.option-item');
+            const paymentForm = document.getElementById('payment-form');
+            const payButton = document.getElementById('pay-button');
+            const payBtnText = document.getElementById('pay-btn-text');
+            const amountDisplay = document.getElementById('payment-amount-display');
+            const messageContainer = document.getElementById('message-container');
+            const gatewayImg = document.getElementById('gateway-img');
+
+            // ── URL Params ────────────────────────────────────────────────
+            const params = new URLSearchParams(window.location.search);
+            let amount = parseInt(params.get('amount'), 10) || 0;
+            let gateway = params.get('gateway') || '';
+
+            // ── Init UI ───────────────────────────────────────────────────
+            amountDisplay.textContent = `$${amount}`;
+            payBtnText.textContent = amount > 0 ? `Pay $${amount} Now` : 'Pay Now';
+            payButton.disabled = amount <= 0;
+
+            if (gatewayImg) {
+                gatewayImg.src = gateway === 'sq' ? './checkout-square.png' : './checkout.png';
+            }
+
+            // Auto-select purpose from URL
+            const urlPurpose = params.get('purpose');
+            if (urlPurpose) {
+                const match = Array.from(optionItems).find(i => i.dataset.value === urlPurpose);
+                if (match) selectPurpose(match.textContent.trim(), match.dataset.value);
+            }
+
+            // ── Floating Label — Name Input ───────────────────────────────
+            function syncNameFloat() {
+                nameWrap.classList.toggle('has-value', nameInput.value.length > 0);
+            }
+            nameInput.addEventListener('focus', () => nameWrap.classList.add('focused'));
+            nameInput.addEventListener('blur', () => { nameWrap.classList.remove('focused'); syncNameFloat(); });
+            nameInput.addEventListener('input', syncNameFloat);
+            syncNameFloat(); // run on load in case autofilled
+
+            // ── Floating Label — Purpose Dropdown ─────────────────────────
+            function syncPurposeFloat() {
+                purposeFloatWrap.classList.toggle('has-value', purposeDisplay.value.length > 0);
+            }
+
+            // ── Dropdown Open / Close ─────────────────────────────────────
+            function openDropdown() {
+                optionsPanel.classList.add('is-open');
+                purposeDisplay.classList.add('is-open');
+                chevron.classList.add('is-open');
+                purposeFloatWrap.classList.add('focused');
+                dropdownSearch.value = '';
+                filterOptions('');
+                dropdownSearch.focus();
+            }
+
+            function closeDropdown() {
+                optionsPanel.classList.remove('is-open');
+                purposeDisplay.classList.remove('is-open');
+                chevron.classList.remove('is-open');
+                purposeFloatWrap.classList.remove('focused');
+                syncPurposeFloat();
+            }
+
+            purposeDisplay.addEventListener('click', () => {
+                optionsPanel.classList.contains('is-open') ? closeDropdown() : openDropdown();
+            });
+
+            // Click outside closes
+            document.addEventListener('click', (e) => {
+                if (!purposeWrapper.contains(e.target)) closeDropdown();
+            });
+
+            // Keyboard nav
+            purposeDisplay.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDropdown(); }
+                if (e.key === 'Escape') closeDropdown();
+            });
+
+            dropdownSearch.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') { closeDropdown(); purposeDisplay.focus(); }
+            });
+
+            // ── Filter Options ────────────────────────────────────────────
+            dropdownSearch.addEventListener('input', () => {
+                filterOptions(dropdownSearch.value);
+            });
+
+            function filterOptions(query) {
+                const q = query.toLowerCase().trim();
+                let visible = 0;
+                optionItems.forEach(item => {
+                    const text = item.textContent.trim().toLowerCase();
+                    const show = text.includes(q);
+                    item.style.display = show ? '' : 'none';
+                    if (show) visible++;
+                });
+                noResults.style.display = visible === 0 ? 'block' : 'none';
+            }
+
+            // ── Select Option ─────────────────────────────────────────────
+            optionItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectPurpose(item.textContent.trim(), item.dataset.value);
+                    closeDropdown();
+                });
+            });
+
+            function selectPurpose(text, val) {
+                purposeDisplay.value = text;
+                purposeValue.value = val;
+                syncPurposeFloat();
+
+                // Mark selected
+                optionItems.forEach(i => i.classList.toggle('selected', i.dataset.value === val));
+
+                // Update URL silently
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('purpose', val);
+                window.history.replaceState({}, '', newUrl);
+            }
+
+            // ── Form Submit ───────────────────────────────────────────────
+            paymentForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                payButton.disabled = true;
+                payButton.innerHTML = '<div class="btn-spinner"></div><span>Processing…</span>';
+                messageContainer.innerHTML = '';
+
+                const payload = {
+                    name: nameInput.value,
+                    amount: amount,
+                    gateway: gateway,
+                    purpose: purposeValue.value || purposeDisplay.value
+                };
+
+                try {
+                    const api_end_point = 'https://api.expertcodecraft.com';
+                    const response = await fetch(`${api_end_point}/noAuth/create-checkout-session`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.redirectUrl) {
+                        window.location.href = result.redirectUrl;
+                    } else {
+                        throw new Error(result.message || 'Something went wrong.');
+                    }
+
+                } catch (error) {
+                    messageContainer.innerHTML = `
+                        <div class="message-box message-error">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            ${error.message}
+                        </div>`;
+                    payButton.disabled = false;
+                    payButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg><span>Pay $${amount} Now</span>`;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
