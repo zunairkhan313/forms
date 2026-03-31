@@ -489,6 +489,7 @@
 	<form class="contact100-form validate-form" name="google-sheet" enctype="multipart/form-data" id="form"
 		autocomplete="on" action="#" method="POST">
 		<input type="hidden" name="allowSubmit" id="allowSubmit">
+		<input type="hidden" id="isAd" name="isAd" value="false">
 
 		<div class="form-header">
 			<img src="https://crm.expertscommunication.net/images/logo.png" draggable="false"
@@ -633,8 +634,33 @@
 			const urlParams = new URLSearchParams(window.location.search);
 			const jt = urlParams.get('jt');
 			const p = urlParams.get('p');
+			const isAdParam = urlParams.get('isAd');
+			const isAd = isAdParam !== null && ['true', '1', 'yes'].includes(isAdParam.trim().toLowerCase());
+			document.getElementById('isAd').value = isAd ? 'true' : 'false';
+
+			function createSubmitHiddenInput(name, value) {
+				const hiddenInput = document.createElement('input');
+				hiddenInput.type = 'hidden';
+				hiddenInput.name = name;
+				hiddenInput.value = value;
+				hiddenInput.dataset.generated = 'true';
+				form.appendChild(hiddenInput);
+			}
+
+			function disablePrefilledField(element) {
+				if (!element) return;
+				const parent = element.closest('.wrap-input100');
+				if (parent) {
+					parent.classList.add('has-val');
+				}
+				createSubmitHiddenInput(element.name, element.value);
+				element.setAttribute('disabled', 'disabled');
+			}
+
 			if (jt) {
-				document.getElementById('designation').value = jt.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+				const designation = document.getElementById('designation');
+				designation.value = jt.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+				disablePrefilledField(designation);
 			}
 
 			if (p) {
@@ -645,6 +671,7 @@
 					const normalizedOption = option.value.toLowerCase().replace(/[^a-z0-9]/g, '');
 					if (normalizedOption === normalizedPt) {
 						select.value = option.value;
+						disablePrefilledField(select);
 						break;
 					}
 				}
