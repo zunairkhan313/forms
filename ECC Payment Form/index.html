@@ -603,7 +603,7 @@
                             <label class="float-label" id="purpose-float-label">Purpose of Payment</label>
 
                             <!-- Trigger field shows selected value -->
-                            <input type="text" id="purpose-display" class="dropdown-trigger" placeholder=" " readonly
+                            <input type="text" id="purpose-display" class="dropdown-trigger" placeholder=" " style="caret-color: transparent;" inputmode="none" onpaste="return false;"
                                 required>
                             <input type="hidden" id="purpose-value">
 
@@ -631,6 +631,27 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                                         </svg>
                                         Website Development
+                                    </div>
+                                    <div class="option-item" data-value="domain-hosting">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Domain & Hosting
+                                    </div>
+                                    <div class="option-item" data-value="domain">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Domain
+                                    </div>
+                                    <div class="option-item" data-value="hosting">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Hosting
                                     </div>
                                     <div class="option-item" data-value="custom-website">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -811,8 +832,10 @@
 
             // Keyboard nav
             purposeDisplay.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDropdown(); }
-                if (e.key === 'Escape') closeDropdown();
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDropdown(); return; }
+                if (e.key === 'Escape') { closeDropdown(); return; }
+                if (e.key === 'Tab') return;
+                e.preventDefault();
             });
 
             dropdownSearch.addEventListener('keydown', (e) => {
@@ -875,7 +898,7 @@
                 };
 
                 try {
-                    const api_end_point = 'https://api.expertcodecraft.com';
+                    const api_end_point = 'https://api.expertdesignhub.com';
                     const response = await fetch(`${api_end_point}/noAuth/create-checkout-session`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
