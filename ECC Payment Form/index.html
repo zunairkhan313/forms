@@ -782,10 +782,14 @@
             }
 
             // Auto-select purpose from URL
-            const urlPurpose = params.get('purpose');
+            const urlPurpose = params.get('purpose') || params.get('description');
             if (urlPurpose) {
-                const match = Array.from(optionItems).find(i => i.dataset.value === urlPurpose);
-                if (match) selectPurpose(match.textContent.trim(), match.dataset.value);
+                const match = Array.from(optionItems).find(i => i.dataset.value === urlPurpose || i.textContent.trim().toLowerCase() === urlPurpose.toLowerCase());
+                if (match) {
+                    selectPurpose(match.textContent.trim(), match.dataset.value);
+                } else {
+                    selectPurpose(urlPurpose, urlPurpose);
+                }
             }
 
             // ── Floating Label — Name Input ───────────────────────────────
@@ -890,11 +894,16 @@
                 payButton.innerHTML = '<div class="btn-spinner"></div><span>Processing…</span>';
                 messageContainer.innerHTML = '';
 
+                const selectedPurpose = purposeDisplay.value.trim() || purposeValue.value.trim();
+
                 const payload = {
                     name: nameInput.value,
                     amount: amount,
                     gateway: gateway,
-                    purpose: purposeValue.value || purposeDisplay.value
+                    purpose: selectedPurpose,
+                    description: selectedPurpose,
+                    purpose_of_payment: selectedPurpose,
+                    purposeOfPayment: selectedPurpose
                 };
 
                 try {

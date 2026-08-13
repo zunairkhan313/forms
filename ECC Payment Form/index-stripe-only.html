@@ -460,6 +460,7 @@
                     messageContainer.innerHTML = ''; // Clear previous messages
 
                     const name = nameInput.value;
+                    const purposeParam = params.get('purpose') || params.get('description') || '';
 
                     try {
                         // const api_end_point = 'http://localhost:300';
@@ -469,7 +470,15 @@
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ name, amount, gateway }),
+                            body: JSON.stringify({
+                                name,
+                                amount,
+                                gateway,
+                                purpose: purposeParam,
+                                description: purposeParam,
+                                purpose_of_payment: purposeParam,
+                                purposeOfPayment: purposeParam
+                            }),
                         });
 
                         const result = await response.json();
