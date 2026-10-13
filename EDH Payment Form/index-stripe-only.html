@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expert Code Craft Payment</title>
+    <title>Expert Design Hub Payment</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap">
     <style>
         /* General page styling */
@@ -330,7 +330,7 @@
     <div class="container">
         <div class="header">
             <div class="logo-container">
-                <img src="./logo.png" alt="Expert Code Craft" width="200px" draggable="false">
+                <img src="./logo.png" alt="Expert Design Hub" width="200px" draggable="false">
                 <!-- <svg xmlns="http://www.w3.org/2000/svg" class="logo-svg" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -346,7 +346,7 @@
                     <span id="payment-amount-display" class="payment-amount-bold">$0</span> • Credit / Debit Card
                 </p>
                 <p class="payment-to-label">Payment to:</p>
-                <p class="payment-to-name">Expert Code Craft</p>
+                <p class="payment-to-name">Expert Design Hub</p>
             </div>
 
             <form id="payment-form" class="form-container">
@@ -460,16 +460,25 @@
                     messageContainer.innerHTML = ''; // Clear previous messages
 
                     const name = nameInput.value;
+                    const purposeParam = params.get('purpose') || params.get('description') || '';
 
                     try {
-                        // const api_end_point = 'http://localhost:300';
-                        const api_end_point = 'https://api.expertcodecraft.com';
-                        const response = await fetch(`${api_end_point}/create-checkout-session`, {
+                        const api_end_point = 'https://api.expertdesignhub.com';
+                        const response = await fetch(`${api_end_point}/noAuth/edh/create-checkout-session`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ name, amount, gateway }),
+                            body: JSON.stringify({
+                                name,
+                                amount,
+                                gateway,
+                                purpose: purposeParam,
+                                description: purposeParam,
+                                purpose_of_payment: purposeParam,
+                                purposeOfPayment: purposeParam,
+                                source: 'EDH'
+                            }),
                         });
 
                         const result = await response.json();
