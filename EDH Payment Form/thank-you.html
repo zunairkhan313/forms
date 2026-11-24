@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful — Expert Design Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --brand: #e5672d;
+            --brand-dark: #d93e2a;
+            --brand-light: #eff6ff;
+            --brand-muted: #dbeafe;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --success-light: #f0fdf4;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #fafafe 50%, #f0f7ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+            color: var(--gray-800);
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 460px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem 1.25rem;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-wrap img {
+            height: 52px;
+            width: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .hero-section {
+            padding: 2rem 2rem 1.5rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--success-light) 0%, #ffffff 100%);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .success-icon-wrap {
+            width: 72px;
+            height: 72px;
+            background: var(--success-bg);
+            border: 3px solid #bbf7d0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 16px rgba(22, 163, 74, 0.15);
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon-wrap svg {
+            width: 38px;
+            height: 38px;
+            color: var(--success);
+        }
+
+        .hero-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.35rem;
+        }
+
+        .hero-desc {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            line-height: 1.45;
+        }
+
+        .card-body {
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .receipt-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .receipt-label {
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .receipt-value {
+            font-weight: 600;
+            color: var(--gray-800);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .amount-row {
+            padding-top: 0.85rem;
+            border-top: 1px dashed var(--gray-200);
+        }
+
+        .amount-row .receipt-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .amount-row .receipt-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .actions-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .btn-home {
+            width: 100%;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 0.85rem 1.5rem;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .btn-home:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        .btn-print {
+            width: 100%;
+            background: transparent;
+            color: var(--gray-600);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.65rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .btn-print:hover {
+            background: var(--gray-100);
+            color: var(--gray-800);
+        }
+
+        .card-footer {
+            padding: 1rem 2rem 1.5rem;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-note {
+            font-size: 0.74rem;
+            color: var(--gray-400);
+            line-height: 1.4;
+        }
+
+        .footer-note a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                max-width: 100%;
+            }
+
+            .actions-wrap {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="logo-wrap">
+                <img src="./logo.png" alt="Expert Design Hub" draggable="false">
+            </div>
+        </div>
+
+        <!-- Success Hero -->
+        <div class="hero-section">
+            <div class="success-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h1 class="hero-title">Payment Successful!</h1>
+            <p class="hero-desc">Thank you for your payment to Expert Design Hub. Your transaction has been completed.
+            </p>
+        </div>
+
+        <!-- Receipt Body -->
+        <div class="card-body">
+            <div class="receipt-box">
+                <div class="receipt-row">
+                    <span class="receipt-label">Status</span>
+                    <span class="status-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Completed
+                    </span>
+                </div>
+                <div class="receipt-row" id="row-name" style="display: none;">
+                    <span class="receipt-label">Customer Name</span>
+                    <span class="receipt-value" id="receipt-name">—</span>
+                </div>
+                <div class="receipt-row" id="row-purpose" style="display: none;">
+                    <span class="receipt-label">Payment Purpose</span>
+                    <span class="receipt-value" id="receipt-purpose">—</span>
+                </div>
+                <div class="receipt-row" id="row-date">
+                    <span class="receipt-label">Date</span>
+                    <span class="receipt-value" id="receipt-date">—</span>
+                </div>
+                <div class="receipt-row" id="row-ref">
+                    <span class="receipt-label">Reference ID</span>
+                    <span class="receipt-value" id="receipt-ref">—</span>
+                </div>
+                <div class="receipt-row amount-row">
+                    <span class="receipt-label">Total Paid</span>
+                    <span class="receipt-value" id="receipt-amount">$0</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions-wrap">
+                <button type="button" class="btn-print" onclick="window.print()">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    Print Receipt
+                </button>
+                <a href="https://expertdesignhub.com" class="btn-home">
+                    <span>Back to Expert Design Hub</span>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer">
+            <p class="footer-note">
+                A confirmation has been sent to your account.<br>
+                Need help? Contact <a href="mailto:info@expertdesignhub.com">info@expertdesignhub.com</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+
+            // Read from sessionStorage if saved before checkout
+            let stored = {};
+            try {
+                stored = JSON.parse(sessionStorage.getItem('edh_payment_details') || '{}');
+            } catch (e) {
+                stored = {};
+            }
+
+            // Extract values (URL params take priority, fallback to sessionStorage)
+            const amount = params.get('amount') || stored.amount || '0';
+            const name = params.get('name') || stored.name || '';
+            const purpose = params.get('purpose') || params.get('description') || stored.purpose || '';
+            const ref = params.get('session_id') || params.get('transactionId') || params.get('orderId') || params.get('payment_intent') || stored.ref || ('EDH-' + Math.random().toString(36).substring(2, 9).toUpperCase());
+
+            // Populate fields
+            document.getElementById('receipt-amount').textContent = `$${amount}`;
+
+            if (name) {
+                document.getElementById('receipt-name').textContent = name;
+                document.getElementById('row-name').style.display = 'flex';
+            }
+
+            if (purpose) {
+                document.getElementById('receipt-purpose').textContent = purpose;
+                document.getElementById('row-purpose').style.display = 'flex';
+            }
+
+            document.getElementById('receipt-ref').textContent = ref;
+
+            const dateObj = stored.date ? new Date(stored.date) : new Date();
+            document.getElementById('receipt-date').textContent = dateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+
+            // Clean up session storage after loading
+            try {
+                sessionStorage.removeItem('edh_payment_details');
+            } catch (e) { }
+        });
+    </script>
+</body>
+
+</html>

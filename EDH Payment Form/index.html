@@ -772,6 +772,21 @@
             let amount = parseInt(params.get('amount'), 10) || 0;
             let gateway = params.get('gateway') || '';
 
+            // ── Check for Successful Payment Return ───────────────────────
+            const isSuccess = params.get('status') === 'success' ||
+                              params.get('payment') === 'success' ||
+                              params.get('success') === 'true' ||
+                              params.get('redirect_status') === 'succeeded' ||
+                              params.has('session_id') ||
+                              params.has('transactionId') ||
+                              params.has('orderId') ||
+                              params.has('payment_intent');
+
+            if (isSuccess) {
+                window.location.href = `thank-you.html${window.location.search}`;
+                return;
+            }
+
             // ── Init UI ───────────────────────────────────────────────────
             amountDisplay.textContent = `$${amount}`;
             payBtnText.textContent = amount > 0 ? `Pay $${amount} Now` : 'Pay Now';
@@ -895,6 +910,19 @@
                 messageContainer.innerHTML = '';
 
                 const selectedPurpose = purposeDisplay.value.trim() || purposeValue.value.trim();
+                const currentUrl = new URL(window.location.href);
+                const thankYouUrl = new URL('thank-you.html', currentUrl).href;
+                const cancelUrl = currentUrl.href;
+
+                // Save details so thank-you page has complete info even if gateway doesn't echo it back
+                try {
+                    sessionStorage.setItem('edh_payment_details', JSON.stringify({
+                        name: nameInput.value,
+                        amount: amount,
+                        purpose: selectedPurpose,
+                        date: new Date().toISOString()
+                    }));
+                } catch (e) {}
 
                 const payload = {
                     name: nameInput.value,
@@ -904,7 +932,11 @@
                     description: selectedPurpose,
                     purpose_of_payment: selectedPurpose,
                     purposeOfPayment: selectedPurpose,
-                    source: 'EDH'
+                    source: 'EDH',
+                    success_url: thankYouUrl,
+                    cancel_url: cancelUrl,
+                    return_url: thankYouUrl,
+                    redirect_url: thankYouUrl
                 };
 
                 try {
@@ -919,6 +951,8 @@
 
                     if (response.ok && result.redirectUrl) {
                         window.location.href = result.redirectUrl;
+                    } else if (response.ok && (result.success || result.status === 'success')) {
+                        window.location.href = `thank-you.html?name=${encodeURIComponent(nameInput.value)}&amount=${amount}&purpose=${encodeURIComponent(selectedPurpose)}`;
                     } else {
                         throw new Error(result.message || 'Something went wrong.');
                     }

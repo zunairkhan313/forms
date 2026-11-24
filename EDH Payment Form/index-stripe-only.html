@@ -413,6 +413,21 @@
                 const urlAmount = params.get('amount');
                 const urlGateway = params.get('gateway');
 
+                // Check for successful payment return
+                const isSuccess = params.get('status') === 'success' ||
+                                  params.get('payment') === 'success' ||
+                                  params.get('success') === 'true' ||
+                                  params.get('redirect_status') === 'succeeded' ||
+                                  params.has('session_id') ||
+                                  params.has('transactionId') ||
+                                  params.has('orderId') ||
+                                  params.has('payment_intent');
+
+                if (isSuccess) {
+                    window.location.href = `thank-you.html${window.location.search}`;
+                    return;
+                }
+
                 if (urlAmount) {
                     amount = parseInt(urlAmount, 10);
                     amountDisplay.textContent = `$${amount}`;
@@ -461,6 +476,18 @@
 
                     const name = nameInput.value;
                     const purposeParam = params.get('purpose') || params.get('description') || '';
+                    const currentUrl = new URL(window.location.href);
+                    const thankYouUrl = new URL('thank-you.html', currentUrl).href;
+                    const cancelUrl = currentUrl.href;
+
+                    try {
+                        sessionStorage.setItem('edh_payment_details', JSON.stringify({
+                            name: name,
+                            amount: amount,
+                            purpose: purposeParam,
+                            date: new Date().toISOString()
+                        }));
+                    } catch (e) {}
 
                     try {
                         const api_end_point = 'https://api.expertdesignhub.com';
@@ -477,7 +504,11 @@
                                 description: purposeParam,
                                 purpose_of_payment: purposeParam,
                                 purposeOfPayment: purposeParam,
-                                source: 'EDH'
+                                source: 'EDH',
+                                success_url: thankYouUrl,
+                                cancel_url: cancelUrl,
+                                return_url: thankYouUrl,
+                                redirect_url: thankYouUrl
                             }),
                         });
 
@@ -485,6 +516,8 @@
 
                         if (response.ok && result.redirectUrl) {
                             window.location.href = result.redirectUrl;
+                        } else if (response.ok && (result.success || result.status === 'success')) {
+                            window.location.href = `thank-you.html?name=${encodeURIComponent(name)}&amount=${amount}&purpose=${encodeURIComponent(purposeParam)}`;
                         } else {
                             const messageBox = document.createElement('div');
                             messageBox.classList.add('message-box', 'message-error');
