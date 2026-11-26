@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Redirect /thank-you.html to /thank-you (hide .html in URL)
+RewriteCond %{THE_REQUEST} \s/+(.*/)?thank-you\.html[\s?] [NC]
+RewriteRule ^ /%1thank-you [R=301,L,NE]
+
+# Internally serve thank-you.html when /thank-you is requested
+RewriteRule ^thank-you/?$ thank-you.html [NC,L]

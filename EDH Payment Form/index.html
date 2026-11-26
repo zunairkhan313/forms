@@ -825,7 +825,7 @@
                               params.has('payment_intent');
 
             if (isSuccess) {
-                window.location.href = `thank-you.html${window.location.search}`;
+                window.location.href = `thank-you${window.location.search}`;
                 return;
             }
 
@@ -949,7 +949,7 @@
 
                 const selectedPurpose = purposeValue.value || purposeDisplay.value;
                 const currentUrl = new URL(window.location.href);
-                const thankYouUrl = new URL('thank-you.html', currentUrl).href;
+                const thankYouUrl = new URL('thank-you', currentUrl).href;
                 const cancelUrl = currentUrl.href;
 
                 // Save details so thank-you page has complete info even if gateway doesn't echo it back
@@ -986,7 +986,7 @@
                     if (response.ok && result.redirectUrl) {
                         window.location.href = result.redirectUrl;
                     } else if (response.ok && (result.success || result.status === 'success')) {
-                        window.location.href = `thank-you.html?name=${encodeURIComponent(nameInput.value)}&amount=${amount}&purpose=${encodeURIComponent(purposeDisplay.value.trim() || selectedPurpose)}`;
+                        window.location.href = `thank-you?name=${encodeURIComponent(nameInput.value)}&amount=${amount}&purpose=${encodeURIComponent(purposeDisplay.value.trim() || selectedPurpose)}`;
                     } else {
                         throw new Error(result.message || 'Something went wrong.');
                     }

@@ -424,7 +424,7 @@
                                   params.has('payment_intent');
 
                 if (isSuccess) {
-                    window.location.href = `thank-you.html${window.location.search}`;
+                    window.location.href = `thank-you${window.location.search}`;
                     return;
                 }
 
@@ -477,7 +477,7 @@
                     const name = nameInput.value;
                     const purposeParam = params.get('purpose') || params.get('description') || '';
                     const currentUrl = new URL(window.location.href);
-                    const thankYouUrl = new URL('thank-you.html', currentUrl).href;
+                    const thankYouUrl = new URL('thank-you', currentUrl).href;
                     const cancelUrl = currentUrl.href;
 
                     try {
@@ -517,7 +517,7 @@
                         if (response.ok && result.redirectUrl) {
                             window.location.href = result.redirectUrl;
                         } else if (response.ok && (result.success || result.status === 'success')) {
-                            window.location.href = `thank-you.html?name=${encodeURIComponent(name)}&amount=${amount}&purpose=${encodeURIComponent(purposeParam)}`;
+                            window.location.href = `thank-you?name=${encodeURIComponent(name)}&amount=${amount}&purpose=${encodeURIComponent(purposeParam)}`;
                         } else {
                             const messageBox = document.createElement('div');
                             messageBox.classList.add('message-box', 'message-error');
